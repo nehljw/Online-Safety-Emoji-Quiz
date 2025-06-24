@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emoji Charade Quiz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Fredoka', sans-serif;
+      background: #fef7f0 url('data:image/svg+xml,%3Csvg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23ffe6f0" fill-opacity="0.4"%3E%3Ccircle cx="2" cy="2" r="2"/%3E%3Ccircle cx="22" cy="22" r="2"/%3E%3C/g%3E%3C/svg%3E') repeat;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    header {
+      background: #52247f;
+      color: white;
+      padding: 1rem;
+      font-size: 1.5rem;
+    }
+    #start-screen, #end-screen, #quiz-container {
+      max-width: 680px;
+      margin: 2rem auto;
+      padding: 2rem 1rem;
+      border-radius: 20px;
+      background-color: #fff6fb;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    #quiz-container, #end-screen {
+      display: none;
+    }
+    .emoji {
+      font-size: 2.5rem;
+      margin-bottom: 0.2rem;
+    }
+    #hint-box {
+      min-height: 2em;
+      height: 2.2em;
+      font-style: italic;
+      color: #00788a;
+      margin-top: 0.2rem;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .boxes-container {
+      min-height: 180px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 1rem 0;
+    }
+    .boxes {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+    .word-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .letter-box {
+      width: 36px;
+      height: 40px;
+      border: 2px solid #52247f;
+      margin: 2px;
+      font-size: 1.3rem;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 40px;
+      background-color: white;
+      border-radius: 10px;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: bold;
+    }
+    .hyphen-box {
+      width: 36px;
+      height: 40px;
+      margin: 2px;
+      font-size: 1.3rem;
+      line-height: 40px;
+      text-align: center;
+      background-color: transparent;
+      border: none;
+    }
+    .space-box {
+      width: 20px;
+      height: 40px;
+      margin: 2px;
+      background: transparent;
+      border: none;
+    }
+    input[type="text"] {
+      padding: 0.5rem;
+      font-size: 1rem;
+      width: 100%;
+      max-width: 300px;
+      border: 2px solid #0085fc;
+      border-radius: 10px;
+      margin-bottom: 6px;
+    }
+    .button-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    button {
+      padding: 0.5rem 1.2rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: bold;
+    }
+    button.primary {
+      background-color: #ed1d6b;
+      color: white;
+    }
+    button.primary:hover {
+      background-color: #52247f;
+    }
+    button.secondary {
+      background-color: #ffd24f;
+      color: #333;
+    }
+    button.secondary:hover {
+      background-color: #f9a01b;
+    }
+    #timer {
+      font-size: 1rem;
+      color: #f1386a;
+      margin-top: 1rem;
+    }
+    #score {
+      font-weight: bold;
+      color: #52247f;
+      margin-top: 0.3rem;
+    }
+    #feedback {
+      font-size: 1rem;
+      margin-top: 4px;
+    }
+    .correct {
+      color: #00788a;
+    }
+    .wrong {
+      color: #ed1d6b;
+    }
+    #end-screen h2 {
+      font-size: 1.75rem;
+      color: #ed1d6b;
+    }
+    #end-screen p {
+      font-size: 1.2rem;
+    }
+    @media (max-width: 480px) {
+      .letter-box, .hyphen-box {
+        width: 30px;
+        height: 36px;
+        font-size: 1.1rem;
+      }
+      .boxes-container {
+        min-height: 140px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>Emoji Charade: Online Safety Edition</header>
+
+  <div id="start-screen">
+    <div id="instructions" style="background: #ffffff; color: #52247f; border-radius: 16px; padding: 1.2rem 1rem 1.2rem 1rem; margin-bottom: 1.5rem; font-size: 1.1rem; box-shadow: 0 2px 8px rgba(237,29,107,0.08);">
+      <h2 style="margin-top:0; color:#ed1d6b; font-size:1.5rem;">How to Play 🎉</h2>
+      <h5 style="text-align:left; max-width:500px; margin:0 auto; font-weight:500;">
+        1. Guess the <span style="color:#f9a01b;">online safety term</span> from the emojis and letter boxes.</br>
+        2. Type your answer and hit <span style="color:#ed1d6b;;"><b>Submit</b></span>.</br>
+        3. Use <span style="color:#00788a;">hints</span> if you get stuck (limited to 3 per game).</br>
+        4. Skip a word if you want to try another.</br>
+        5. Score points for each correct answer before time runs out!</br>
+      </h5>
+      <div style="margin-top:0.7rem; font-size:1.05rem; color:#52247f;">Ready? Click <b>Start Game</b> to begin! 🚀</div>
+    </div>
+    <button class="primary" onclick="startGame()">Start Game</button>
+  </div>
+
+  <div id="quiz-container">
+    <div class="emoji" id="emoji-display"></div><br>
+    <div id="char-count" style="color:#52247f; font-size:1.1rem; margin-bottom:0.5rem;"></div>
+    <div id="hint-box"></div>
+    <form id="answer-form" autocomplete="off">
+      <div id="input-rows"></div>
+      <div style="height:18px;"></div>
+      <div id="feedback-container" style="min-height:2.2em;display:flex;align-items:center;justify-content:center;">
+        <div id="feedback" style="margin-top:0px;width:100%;"></div>
+      </div>
+      <div style="height:10px;"></div>
+      <div>
+        <button type="submit" class="primary">Submit</button>
+      </div>
+    </form>
+    <div class="button-row">
+      <button class="secondary" onclick="revealHint()">Hint (<span id="hint-count">3</span>)</button>
+      <button class="secondary" onclick="skipWord()">Skip</button>
+    </div>
+    <div id="timer">⏱️ Time Left: <span id="time">60</span>s</div>
+    <div id="score">🌟 Score: <span id="score-count">0</span></div>
+  </div>
+
+  <div id="end-screen">
+    <h2>Time's Up!</h2>
+    <p id="end-message"></p>
+    <p>Your final score: <span id="final-score"></span></p>
+    <div class="button-row" style="margin-top:18px;">
+      <button class="primary" onclick="startGame()">Play Again</button>
+      <button class="secondary" onclick="backToHome()">Back to Home</button>
+    </div>
+  </div>
+
+  <script>
+    const words = [
+      { word: "privacy settings", emoji: "👁️🔒⚙️", hint: "Controls who can see your information online." },
+      { word: "personal information", emoji: "🧍📱🏠🎂", hint: "Things like your name, address, and birthday." },
+      { word: "two factor authentication", emoji: "🔐📲#️⃣", hint: "Adds an extra layer when you log in." },
+      { word: "netiquette", emoji: "💬😊🤝🌐", hint: "Good manners on the internet." },
+      { word: "digital footprint", emoji: "💻👣", hint: "What you leave behind online." },
+      { word: "information literacy", emoji: "🧠📚🔍🌐", hint: "Skill to judge what’s real or fake online." },
+      { word: "report", emoji: "🚨📢🛑", hint: "What you do when something online is not right." },
+      { word: "screen time", emoji: "📱⌛", hint: "How long you spend staring at your device." },
+      { word: "cyberbullying", emoji: "💻😡📩😢", hint: "Mean messages that hurt online." },
+      { word: "fake news", emoji: "❌🤥📰", hint: "It spreads lies, not facts." },
+      { word: "seek help", emoji: "🆘🤝📞👂", hint: "What you do when things feel wrong online." },
+      { word: "mental well-being", emoji: "😊🧠💖", hint: "How your mind and emotions feel." }
+    ];
+
+    let remainingWords = [];
+    let currentWord = null;
+    let hintsLeft = 3;
+    let hintUsedForCurrent = false;
+    let timer = 60;
+    let score = 0;
+    let interval = null;
+
+    function show(id) {
+      document.getElementById(id).style.display = 'block';
+    }
+    function hide(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    function getEndMessage(score) {
+      if (score >= 10) return "🎊 Incredible job! You're an online safety superstar!";
+      if (score >= 5) return "👏 Well done! You know your online stuff!";
+      return "👍 Great try! Practice makes perfect!";
+    }
+
+    function startGame() {
+      remainingWords = [...words];
+      currentWord = null;
+      hintsLeft = 3;
+      hintUsedForCurrent = false;
+      timer = 60;
+      score = 0;
+      document.getElementById("score-count").textContent = score;
+      document.getElementById("hint-count").textContent = hintsLeft;
+      document.getElementById("feedback").textContent = "";
+      hide("start-screen");
+      hide("end-screen");
+      show("quiz-container");
+      pickRandomWord();
+      clearInterval(interval);
+      interval = setInterval(() => {
+        timer--;
+        document.getElementById("time").textContent = timer;
+        if (timer <= 0) {
+          clearInterval(interval);
+          hide("quiz-container");
+          document.getElementById("final-score").textContent = score;
+          document.getElementById("end-message").textContent = getEndMessage(score);
+          show("end-screen");
+        }
+      }, 1000);
+    }
+
+    function getCharCounts(word) {
+      // Returns array of lengths for each word part (excluding spaces)
+      return word.split(" ").map(part => part.length);
+    }
+
+    function updateCharCountDisplay(word) {
+      const counts = getCharCounts(word);
+      document.getElementById("char-count").textContent = `(${counts.join(", ")})`;
+    }
+
+    function pickRandomWord() {
+      if (remainingWords.length === 0) return;
+      document.getElementById("hint-box").textContent = "";
+      document.getElementById("feedback").textContent = "";
+      hintUsedForCurrent = false;
+      const index = Math.floor(Math.random() * remainingWords.length);
+      currentWord = remainingWords.splice(index, 1)[0];
+      document.getElementById("emoji-display").textContent = currentWord.emoji;
+      updateCharCountDisplay(currentWord.word);
+      displayBoxes(currentWord.word);
+      // Autofocus first empty input
+      setTimeout(function() {
+        var firstInput = document.querySelector('.letter-box:not([disabled])');
+        if (firstInput) firstInput.focus();
+      }, 100);
+    }
+
+    function displayBoxes(word) {
+      const boxes = document.getElementById("input-rows");
+      boxes.innerHTML = "";
+      const wordParts = word.split(" ");
+      wordParts.forEach((part, partIdx) => {
+        const row = document.createElement("div");
+        row.className = "word-row";
+        for (let i = 0; i < part.length; i++) {
+          const char = part[i];
+          if (char === '-') {
+            const hyphen = document.createElement("span");
+            hyphen.className = "hyphen-box";
+            hyphen.textContent = "-";
+            hyphen.tabIndex = -1;
+            row.appendChild(hyphen);
+          } else {
+            const input = document.createElement("input");
+            input.type = "text";
+            input.maxLength = 1;
+            input.className = "letter-box crossword-input";
+            input.autocomplete = "off";
+            input.inputMode = "text";
+            input.style.textTransform = "uppercase";
+            input.setAttribute('aria-label', `Letter ${i+1} of word ${partIdx+1}`);
+            input.style.margin = "2px";
+            input.style.width = "24px";
+            input.style.height = "24px";
+            input.style.fontSize = "1.3rem";
+            input.style.borderRadius = "8px";
+            input.style.boxShadow = "0 1px 2px #f9a01b22";
+            input.style.background = "#fff";
+            input.style.border = "2px solid #52247f";
+            input.style.textAlign = "center";
+            if (i === 0) {
+              input.value = char.toUpperCase();
+              input.disabled = true;
+              input.style.background = "#f9f6ff";
+              input.style.color = "#333";
+              input.style.fontWeight = "bold";
+              input.style.fontSize = "1.3rem";
+            } else {
+              input.addEventListener('input', function(e) {
+                this.value = this.value.toUpperCase();
+                let next = this.nextElementSibling;
+                // Skip over hyphens
+                while (next && next.classList.contains('hyphen-box')) {
+                  next = next.nextElementSibling;
+                }
+                if (this.value && next && next.tagName === 'INPUT') {
+                  next.focus();
+                } else if (this.value && this.parentElement.nextElementSibling) {
+                  // Move to next row's first input if exists
+                  const nextRow = this.parentElement.nextElementSibling;
+                  if (nextRow) {
+                    let nextInput = nextRow.querySelector('input:not([disabled])');
+                    if (nextInput) nextInput.focus();
+                  }
+                }
+              });
+              input.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && !this.value) {
+                  // Move to previous input, skipping hyphens
+                  let prev = this.previousElementSibling;
+                  while (prev && prev.classList && prev.classList.contains('hyphen-box')) {
+                    prev = prev.previousElementSibling;
+                  }
+                  if (!prev && this.parentElement.previousElementSibling) {
+                    // Go to last input of previous row
+                    const prevRow = this.parentElement.previousElementSibling;
+                    const inputs = prevRow.querySelectorAll('input:not([disabled])');
+                    if (inputs.length) inputs[inputs.length-1].focus();
+                  } else if (prev) {
+                    prev.focus();
+                  }
+                }
+              });
+            }
+            row.appendChild(input);
+          }
+        }
+        boxes.appendChild(row);
+      });
+    }
+
+    function getUserInputFromBoxes(word) {
+      // Reconstruct the answer from the input boxes
+      const wordParts = word.split(" ");
+      let answer = [];
+      const rows = document.getElementById("input-rows").children;
+      for (let p = 0; p < wordParts.length; p++) {
+        const part = wordParts[p];
+        let partStr = "";
+        const row = rows[p];
+        let childIdx = 0;
+        for (let i = 0; i < part.length; i++) {
+          const char = part[i];
+          if (char === '-') {
+            partStr += "-";
+            childIdx++;
+          } else {
+            const input = row.children[childIdx];
+            partStr += input.value;
+            childIdx++;
+          }
+        }
+        answer.push(partStr);
+      }
+      return answer.join(" ").toLowerCase();
+    }
+
+    function submitAnswer() {
+      if (!currentWord) return;
+      const input = getUserInputFromBoxes(currentWord.word);
+      if (input === currentWord.word.toLowerCase()) {
+        score++;
+        document.getElementById("score-count").textContent = score;
+        document.getElementById("feedback").textContent = "✅ Correct!";
+        document.getElementById("feedback").className = "correct";
+        pickRandomWord();
+      } else {
+        document.getElementById("feedback").textContent = "❌ Oops! Try again.";
+        document.getElementById("feedback").className = "wrong";
+      }
+    }
+
+    function revealHint() {
+      if (!currentWord || hintUsedForCurrent) return;
+      if (hintsLeft > 0) {
+        document.getElementById("hint-box").textContent = currentWord.hint;
+        hintsLeft--;
+        hintUsedForCurrent = true;
+        document.getElementById("hint-count").textContent = hintsLeft;
+      } else {
+        document.getElementById("hint-box").textContent = "No hints left!";
+      }
+    }
+
+    function skipWord() {
+      if (!currentWord) return;
+      remainingWords.push(currentWord);
+      pickRandomWord();
+    }
+
+    function backToHome() {
+      hide("end-screen");
+      show("start-screen");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+  show("start-screen");
+  const form = document.getElementById("answer-form");
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    submitAnswer();
+  });
+});
+
+// Expose functions to global scope so inline onclick="..." works
+window.startGame = startGame;
+window.revealHint = revealHint;
+window.skipWord = skipWord;
+window.submitAnswer = submitAnswer;
+window.backToHome = backToHome;
+    
+  </script>
+</body>
+</html>
