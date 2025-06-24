@@ -210,7 +210,7 @@
       <button class="secondary" onclick="revealHint()">Hint (<span id="hint-count">3</span>)</button>
       <button class="secondary" onclick="skipWord()">Skip</button>
     </div>
-    <div id="timer">⏱️ Time Left: <span id="time">60</span>s</div>
+    <div id="timer">⏱️ Time Left: <span id="time">120</span>s</div>
     <div id="score">🌟 Score: <span id="score-count">0</span></div>
   </div>
 
@@ -244,7 +244,7 @@
     let currentWord = null;
     let hintsLeft = 3;
     let hintUsedForCurrent = false;
-    let timer = 60;
+    let timer = 120;
     let score = 0;
     let interval = null;
 
@@ -266,7 +266,7 @@
       currentWord = null;
       hintsLeft = 3;
       hintUsedForCurrent = false;
-      timer = 60;
+      timer = 120;
       score = 0;
       document.getElementById("score-count").textContent = score;
       document.getElementById("hint-count").textContent = hintsLeft;
