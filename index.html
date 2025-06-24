@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Emoji Charade Quiz</title>
+  <title>Guess The Emojis: Online Safety Edition</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
   <style>
     body {
@@ -174,7 +174,7 @@
   </style>
 </head>
 <body>
-  <header>Emoji Charade: Online Safety Edition</header>
+  <header>Guess The Emojis: Online Safety Edition</header>
 
   <div id="start-screen">
     <div id="instructions" style="background: #ffffff; color: #52247f; border-radius: 16px; padding: 1.2rem 1rem 1.2rem 1rem; margin-bottom: 1.5rem; font-size: 1.1rem; box-shadow: 0 2px 8px rgba(237,29,107,0.08);">
@@ -207,10 +207,10 @@
       </div>
     </form>
     <div class="button-row">
-      <button class="secondary" onclick="revealHint()">Hint (<span id="hint-count">3</span>)</button>
+      <button class="secondary" onclick="revealHint()">Hint (<span id="hint-count">5</span>)</button>
       <button class="secondary" onclick="skipWord()">Skip</button>
     </div>
-    <div id="timer">⏱️ Time Left: <span id="time">60</span>s</div>
+    <div id="timer">⏱️ Time Left: <span id="time">100</span>s</div>
     <div id="score">🌟 Score: <span id="score-count">0</span></div>
   </div>
 
@@ -242,9 +242,9 @@
 
     let remainingWords = [];
     let currentWord = null;
-    let hintsLeft = 3;
+    let hintsLeft = 5;
     let hintUsedForCurrent = false;
-    let timer = 60;
+    let timer = 100;
     let score = 0;
     let interval = null;
 
@@ -256,17 +256,18 @@
     }
 
     function getEndMessage(score) {
-      if (score >= 10) return "🎊 Incredible job! You're an online safety superstar!";
-      if (score >= 5) return "👏 Well done! You know your online stuff!";
-      return "👍 Great try! Practice makes perfect!";
+      if (score >= 30) return "🎊 Incredible job! You're an online safety superstar!";
+      if (score >= 24) return "👏 Awesome work! You really know your online safety!";
+      if (score >= 12) return "🙌 Nice try! You're picking things up—keep going!";
+      return "👍 Great try! Every attempt helps you learn and grow!";
     }
 
     function startGame() {
       remainingWords = [...words];
       currentWord = null;
-      hintsLeft = 3;
+      hintsLeft = 5;
       hintUsedForCurrent = false;
-      timer = 60;
+      timer = 100;
       score = 0;
       document.getElementById("score-count").textContent = score;
       document.getElementById("hint-count").textContent = hintsLeft;
@@ -430,7 +431,7 @@
       if (!currentWord) return;
       const input = getUserInputFromBoxes(currentWord.word);
       if (input === currentWord.word.toLowerCase()) {
-        score++;
+        score += 3;
         document.getElementById("score-count").textContent = score;
         document.getElementById("feedback").textContent = "✅ Correct!";
         document.getElementById("feedback").className = "correct";
@@ -446,8 +447,10 @@
       if (hintsLeft > 0) {
         document.getElementById("hint-box").textContent = currentWord.hint;
         hintsLeft--;
+        score = Math.max(0, score - 1);
         hintUsedForCurrent = true;
         document.getElementById("hint-count").textContent = hintsLeft;
+        document.getElementById("score-count").textContent = score;
       } else {
         document.getElementById("hint-box").textContent = "No hints left!";
       }
