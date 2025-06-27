@@ -32,7 +32,7 @@
       display: none;
     }
     .emoji {
-      font-size: 2.5rem;
+      font-size: 1.5rem;
       margin-bottom: 0.2rem;
     }
     #hint-box {
@@ -63,37 +63,66 @@
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
+      margin-bottom: 2px;
     }
     .letter-box {
-      width: 36px;
-      height: 40px;
+      width: 22px;
+      height: 26px;
       border: 2px solid #52247f;
-      margin: 2px;
-      font-size: 1.3rem;
+      border-right: none;
+      margin: 0 4px; /* Increased horizontal space between boxes */
+      font-size: 1rem;
       text-transform: uppercase;
       text-align: center;
-      line-height: 40px;
+      line-height: 26px;
       background-color: white;
-      border-radius: 10px;
       font-family: 'Fredoka', sans-serif;
       font-weight: bold;
+      border-radius: 0;
+      transition: box-shadow 0.2s;
+    }
+    .word-row .letter-box:last-child {
+      border-right: 2px solid #52247f;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+    .word-row .letter-box:first-child {
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+      border-left: 2px solid #52247f;
     }
     .hyphen-box {
-      width: 36px;
-      height: 40px;
-      margin: 2px;
-      font-size: 1.3rem;
-      line-height: 40px;
+      width: 18px;
+      height: 26px;
+      margin: 0 3px;
+      font-size: 1rem;
+      line-height: 26px;
       text-align: center;
       background-color: transparent;
       border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .space-box {
-      width: 20px;
-      height: 40px;
-      margin: 2px;
-      background: transparent;
-      border: none;
+    @media (max-width: 480px) {
+      .letter-box, .hyphen-box {
+        width: 15px;
+        height: 18px;
+        font-size: 0.8rem;
+        border-radius: 4px;
+        line-height: 18px;
+      }
+      .word-row .letter-box:first-child {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+      }
+      .word-row .letter-box:last-child {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+      .boxes-container {
+        min-height: 60px;
+      }
     }
     input[type="text"] {
       padding: 0.5rem;
@@ -140,7 +169,7 @@
       margin-top: 1rem;
     }
     #score {
-      font-weight: bold;
+      font-weight: 1rem;
       color: #52247f;
       margin-top: 0.3rem;
     }
@@ -154,21 +183,68 @@
     .wrong {
       color: #ed1d6b;
     }
-    #end-screen h2 {
-      font-size: 1.75rem;
-      color: #ed1d6b;
+    #end-screen {
+      background: #fff6fb;
+      box-shadow: 0 6px 24px rgba(237,29,107,0.10);
+      border-radius: 24px;
+      padding: 2.5rem 1.5rem 2.5rem 1.5rem;
+      margin-top: 2rem;
+      animation: popin 0.7s cubic-bezier(.68,-0.55,.27,1.55);
     }
-    #end-screen p {
-      font-size: 1.2rem;
+    #end-screen h2 {
+      font-size: 2.2rem;
+      color: #ed1d6b;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 8px #ffd24f44;
+    }
+    #end-message {
+      font-size: 1.25rem;
+      color: #52247f;
+      margin-bottom: 0.7rem;
+      font-weight: 500;
+    }
+    #final-score {
+      display: inline-block;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #fff6fb;
+      background: #52247f;
+      border-radius: 16px;
+      padding: 0.3em 0.9em;
+      margin: 0.5em 0 1em 0;
+      box-shadow: 0 2px 12px none;
+      letter-spacing: 2px;
+      border: 3px solid none;
+      text-shadow: 0 2px 8px none;
+    }
+    #end-screen h5 {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 1.1em 1em 1.1em 1em;
+      margin: 1.2em auto 0 auto;
+      color: #52247f;
+      font-size: 1.08rem;
+      box-shadow: 0 2px 8px #ffd24f22;
+      max-width: 520px;
+      text-align: left;
+    }
+    @keyframes popin {
+      0% { transform: scale(0.7); opacity: 0; }
+      80% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1); }
     }
     @media (max-width: 480px) {
       .letter-box, .hyphen-box {
-        width: 30px;
-        height: 36px;
-        font-size: 1.1rem;
+        width: 18px;
+        height: 22px;
+        font-size: 0.85rem;
+        margin: 0.5px;
+        border-radius: 5px;
+        line-height: 22px;
       }
       .boxes-container {
-        min-height: 140px;
+        min-height: 80px;
       }
     }
   </style>
@@ -180,11 +256,12 @@
     <div id="instructions" style="background: #ffffff; color: #52247f; border-radius: 16px; padding: 1.2rem 1rem 1.2rem 1rem; margin-bottom: 1.5rem; font-size: 1.1rem; box-shadow: 0 2px 8px rgba(237,29,107,0.08);">
       <h2 style="margin-top:0; color:#ed1d6b; font-size:1.5rem;">How to Play 🎉</h2>
       <h5 style="text-align:left; max-width:500px; margin:0 auto; font-weight:500;">
-        1. Guess the <span style="color:#f9a01b;">online safety term</span> from the emojis and letter boxes.</br>
-        2. Type your answer and hit <span style="color:#ed1d6b;;"><b>Submit</b></span>.</br>
-        3. Use <span style="color:#00788a;">hints</span> if you get stuck (limited to 5 per game).</br>
-        4. Skip a word if you want to try another.</br>
-        5. Score points for each correct answer before time runs out!</br>
+        1. Guess the <span style="color:#00788a;">word</span> replaced by the <span style="color:#00788a;">emoji</span> in the phrase.</br>
+        2. Type your answer and hit <span style="color:#ed1d6b;;"><b>Submit</b></span> to complete the online safety tip.</br>
+        3. Use <span style="color:#f9a01b;">hints</span> if you get stuck (limited to 5 per game).</br>
+        4. <span style="color:#f9a01b;">Skip</span> a word if you want to try another.</br>
+        5. Score points (🌟) for each correct answer before time runs out!</br>
+        Note: The number in the bracket indicates how many letters there are in each word. </br>
       </h5>
       <div style="margin-top:0.7rem; font-size:1.05rem; color:#52247f;">Ready? Click <b>Start Game</b> to begin! 🚀</div>
     </div>
@@ -198,11 +275,11 @@
     <form id="answer-form" autocomplete="off">
       <div id="input-rows"></div>
       <div style="height:18px;"></div>
-      <div id="feedback-container" style="min-height:2.2em;display:flex;align-items:center;justify-content:center;">
+      <div id="feedback-container" style="min-height:1.5em;display:flex;align-items:center;justify-content:center;">
         <div id="feedback" style="margin-top:0px;width:100%;"></div>
       </div>
-      <div style="height:10px;"></div>
       <div>
+      <div style="height:10px;"></div>
         <button type="submit" class="primary">Submit</button>
       </div>
     </form>
@@ -210,14 +287,25 @@
       <button class="secondary" onclick="revealHint()">Hint (<span id="hint-count">5</span>)</button>
       <button class="secondary" onclick="skipWord()">Skip</button>
     </div>
-    <div id="timer">⏱️ Time Left: <span id="time">100</span>s</div>
+    <div id="timer">⏱️ Time Left: <span id="time">60</span>s</div>
     <div id="score">🌟 Score: <span id="score-count">0</span></div>
   </div>
 
   <div id="end-screen">
     <h2>Time's Up!</h2>
-    <p id="end-message"></p>
-    <p>Your final score: <span id="final-score"></span></p>
+    <div id="end-message"></div>
+    <div style="margin: 0.7em 0 0.7em 0;">
+      <span style="font-size:1.1rem;color:#52247f;">Your final score:</span><br>
+      <span id="final-score"></span></div>
+    <h5 style="text-align:center; max-width:500px; margin:0 auto; font-weight:500;">
+      Online safety starts with you.<br>
+      Keep building good habits by remembering these 4 key actions:<br>
+      🔒 Set boundaries<br>
+      💭 Think before you act<br>
+      🚩 Flag and report harms<br>
+      🗣️ Tell someone you trust<br>
+      <span style="color:#ed1d6b;font-weight:bold;">Want to level up your digital know-how?</span><br> Visit <a href="https://www.digitalforlife.gov.sg" target="_blank" style="color:#f9a01b;text-decoration:underline;">Digital for Life portal</a> for more tips and tools.
+    </p>
     <div class="button-row" style="margin-top:18px;">
       <button class="primary" onclick="startGame()">Play Again</button>
       <button class="secondary" onclick="backToHome()">Back to Home</button>
@@ -226,25 +314,93 @@
 
   <script>
     const words = [
-      { word: "privacy settings", emoji: "👁️🔒⚙️", hint: "Controls who can see your information online." },
-      { word: "personal information", emoji: "🧍📱🏠🎂", hint: "Things like your name, address, and birthday." },
-      { word: "two factor authentication", emoji: "🔐📲#️⃣", hint: "Adds an extra layer when you log in." },
-      { word: "netiquette", emoji: "💬😊🤝🌐", hint: "Good manners on the internet." },
-      { word: "digital footprint", emoji: "💻👣", hint: "What you leave behind online." },
-      { word: "information literacy", emoji: "🧠📚🔍🌐", hint: "Skill to judge what’s real or fake online." },
-      { word: "report", emoji: "🚨📢🛑", hint: "What you do when something online is not right." },
-      { word: "screen time", emoji: "📱⌛", hint: "How long you spend staring at your device." },
-      { word: "cyberbullying", emoji: "💻😡📩😢", hint: "Mean messages that hurt online." },
-      { word: "fake news", emoji: "❌🤥📰", hint: "It spreads lies, not facts." },
-      { word: "seek help", emoji: "🆘🤝📞👂", hint: "What you do when things feel wrong online." },
-      { word: "mental well-being", emoji: "😊🧠💖", hint: "How your mind and emotions feel." }
+      {
+        word: "privacy",
+        emoji: "set 👁️ settings",
+        hint: "Controls who can see your info online."
+      },
+      {
+        word: "personal",
+        emoji: "secure 👤 information",
+        hint: "Your name, address, or birthday."
+      },
+      {
+        word: "screen",
+        emoji: "balance 📱 use",
+        hint: "Manage how long you use your device daily."
+      },
+      {
+        word: "digital",
+        emoji: "leave better 🌐 footprints",
+        hint: "What you leave behind online."
+      },
+      {
+        word: "block",
+        emoji: "🚫 abusive users",
+        hint: "Stop someone from messaging or contacting you."
+      },
+      {
+        word: "think",
+        emoji: "💭 before clicking",
+        hint: "Pause before making your next move online."
+      },
+      {
+        word: "share",
+        emoji: "think before you 📤",
+        hint: "Check if it’s true, safe or kind before posting."
+      },
+      {
+        word: "fake",
+        emoji: "spot ❌ news",
+        hint: "It spreads lies, not facts."
+      },
+      {
+        word: "scams",
+        emoji: "check for 💸",
+        hint: "Some offers are too good to be true."
+      },
+      {
+        word: "kind",
+        emoji: "be 🥰 online",
+        hint: "Be respectful and gracious in digital spaces."
+      },
+      {
+        word: "support",
+        emoji: "🤝 others in need",
+        hint: "Show care when someone is upset or bullied online."
+      },
+      {
+        word: "flag",
+        emoji: "🚩 bad content",
+        hint: "Mark posts or messages that break community rules."
+      },
+      {
+        word: "report",
+        emoji: "📢 online harms",
+        hint: "Tell someone or a platform about abuse or threats."
+      },
+      {
+        word: "help",
+        emoji: "seek 🆘 when unsure",
+        hint: "If something feels wrong, talk to someone you trust."
+      },
+      {
+        word: "person",
+        emoji: "reach out to a trusted 🙋🏻‍♀️",
+        hint: "Talk to a parent, teacher, or older sibling for advice."
+      },
+      {
+        word: "strong",
+        emoji: "use 💪 passwords",
+        hint: "Create long, hard-to-guess passphrases for safety."
+      }
     ];
 
     let remainingWords = [];
     let currentWord = null;
     let hintsLeft = 5;
     let hintUsedForCurrent = false;
-    let timer = 100;
+    let timer = 60;
     let score = 0;
     let interval = null;
 
@@ -256,7 +412,8 @@
     }
 
     function getEndMessage(score) {
-      if (score >= 30) return "🎊 Incredible job! You're an online safety superstar!";
+      if (score >= 42) return "🎊 Impressive work! You're definitely an online safety guru!"
+      if (score >= 36) return "🎊 Incredible job! You're an online safety superstar!";
       if (score >= 24) return "👏 Awesome work! You really know your online safety!";
       if (score >= 12) return "🙌 Nice try! You're picking things up!";
       return "👍 Great try! Every attempt helps you learn and grow!";
@@ -267,7 +424,7 @@
       currentWord = null;
       hintsLeft = 5;
       hintUsedForCurrent = false;
-      timer = 100;
+      timer = 60;
       score = 0;
       document.getElementById("score-count").textContent = score;
       document.getElementById("hint-count").textContent = hintsLeft;
@@ -301,7 +458,15 @@
     }
 
     function pickRandomWord() {
-      if (remainingWords.length === 0) return;
+      if (remainingWords.length === 0) {
+        // All questions finished, show success screen
+        clearInterval(interval);
+        hide("quiz-container");
+        document.getElementById("final-score").textContent = score;
+        document.getElementById("end-message").textContent = getEndMessage(score);
+        show("end-screen");
+        return;
+      }
       document.getElementById("hint-box").textContent = "";
       document.getElementById("feedback").textContent = "";
       hintUsedForCurrent = false;
@@ -341,9 +506,8 @@
             input.inputMode = "text";
             input.style.textTransform = "uppercase";
             input.setAttribute('aria-label', `Letter ${i+1} of word ${partIdx+1}`);
-            input.style.margin = "2px";
-            input.style.width = "24px";
-            input.style.height = "24px";
+            input.style.width = "20px";
+            input.style.height = "20px";
             input.style.fontSize = "1.3rem";
             input.style.borderRadius = "8px";
             input.style.boxShadow = "0 1px 2px #f9a01b22";
@@ -386,8 +550,10 @@
                   if (!prev && this.parentElement.previousElementSibling) {
                     // Go to last input of previous row
                     const prevRow = this.parentElement.previousElementSibling;
-                    const inputs = prevRow.querySelectorAll('input:not([disabled])');
-                    if (inputs.length) inputs[inputs.length-1].focus();
+                    let lastInput = prevRow.querySelector('input:not([disabled]):last-child');
+                    if (lastInput) {
+                      lastInput.focus();
+                    }
                   } else if (prev) {
                     prev.focus();
                   }
@@ -401,88 +567,50 @@
       });
     }
 
-    function getUserInputFromBoxes(word) {
-      // Reconstruct the answer from the input boxes
-      const wordParts = word.split(" ");
-      let answer = [];
-      const rows = document.getElementById("input-rows").children;
-      for (let p = 0; p < wordParts.length; p++) {
-        const part = wordParts[p];
-        let partStr = "";
-        const row = rows[p];
-        let childIdx = 0;
-        for (let i = 0; i < part.length; i++) {
-          const char = part[i];
-          if (char === '-') {
-            partStr += "-";
-            childIdx++;
-          } else {
-            const input = row.children[childIdx];
-            partStr += input.value;
-            childIdx++;
-          }
-        }
-        answer.push(partStr);
-      }
-      return answer.join(" ").toLowerCase();
-    }
-
-    function submitAnswer() {
-      if (!currentWord) return;
-      const input = getUserInputFromBoxes(currentWord.word);
-      if (input === currentWord.word.toLowerCase()) {
-        score += 3;
-        document.getElementById("score-count").textContent = score;
-        document.getElementById("feedback").textContent = "✅ Correct!";
-        document.getElementById("feedback").className = "correct";
-        pickRandomWord();
-      } else {
-        document.getElementById("feedback").textContent = "❌ Oops! Try again.";
-        document.getElementById("feedback").className = "wrong";
-      }
-    }
-
     function revealHint() {
-      if (!currentWord || hintUsedForCurrent) return;
-      if (hintsLeft > 0) {
-        document.getElementById("hint-box").textContent = currentWord.hint;
-        hintsLeft--;
-        score = Math.max(0, score - 1);
-        hintUsedForCurrent = true;
-        document.getElementById("hint-count").textContent = hintsLeft;
-        document.getElementById("score-count").textContent = score;
-      } else {
-        document.getElementById("hint-box").textContent = "No hints left!";
-      }
+      if (hintsLeft === 0) return;
+      hintsLeft--;
+      score = Math.max(0, score - 1); // Deduct 1 point for using a hint, never below zero
+      document.getElementById("hint-count").textContent = hintsLeft;
+      document.getElementById("score-count").textContent = score;
+      const hintBox = document.getElementById("hint-box");
+      hintBox.textContent = currentWord.hint;
+      hintBox.style.display = "flex";
+      setTimeout(() => {
+        hintBox.style.opacity = 1;
+      }, 10);
+      hintUsedForCurrent = true;
     }
 
     function skipWord() {
-      if (!currentWord) return;
       remainingWords.push(currentWord);
       pickRandomWord();
     }
+
+    document.getElementById("answer-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const inputs = Array.from(document.querySelectorAll(".letter-box"));
+      const userAnswer = inputs.map(input => input.value).join("").replace(/-/g, "");
+      const correctAnswer = currentWord.word.replace(/-/g, "");
+      if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+        // Correct answer
+        score += 3;
+        document.getElementById("score-count").textContent = score;
+        document.getElementById("feedback").textContent = "Correct! 🎉";
+        document.getElementById("feedback").className = "correct";
+        pickRandomWord(); // Immediately go to next word, no pause
+      } else {
+        // Wrong answer
+        score -= 1;
+        document.getElementById("feedback").textContent = "Try again!";
+        document.getElementById("feedback").className = "wrong";
+      }
+    });
 
     function backToHome() {
       hide("end-screen");
       show("start-screen");
     }
-
-    document.addEventListener("DOMContentLoaded", () => {
-  show("start-screen");
-  const form = document.getElementById("answer-form");
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
-    submitAnswer();
-  });
-});
-
-// Expose functions to global scope so inline onclick="..." works
-window.startGame = startGame;
-window.revealHint = revealHint;
-window.skipWord = skipWord;
-window.submitAnswer = submitAnswer;
-window.backToHome = backToHome;
-    
   </script>
 </body>
 </html>
