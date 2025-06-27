@@ -166,12 +166,12 @@
     #timer {
       font-size: 1rem;
       color: #f1386a;
-      margin-top: 1rem;
+      margin-top: 0.5rem;
     }
     #score {
       font-weight: 1rem;
       color: #52247f;
-      margin-top: 0.3rem;
+      margin-top: 1rem;
     }
     #feedback {
       font-size: 1rem;
@@ -196,7 +196,7 @@
       color: #ed1d6b;
       margin-bottom: 0.5rem;
       letter-spacing: 1px;
-      text-shadow: 0 2px 8px #ffd24f44;
+      text-shadow: 0 2px 8px none;
     }
     #end-message {
       font-size: 1.25rem;
@@ -287,8 +287,8 @@
       <button class="secondary" onclick="revealHint()">Hint (<span id="hint-count">5</span>)</button>
       <button class="secondary" onclick="skipWord()">Skip</button>
     </div>
-    <div id="timer">⏱️ Time Left: <span id="time">60</span>s</div>
     <div id="score">🌟 Score: <span id="score-count">0</span></div>
+    <div id="timer">⏱️ Time Left: <span id="time">60</span>s</div>
   </div>
 
   <div id="end-screen">
@@ -299,13 +299,14 @@
       <span id="final-score"></span></div>
     <h5 style="text-align:center; max-width:500px; margin:0 auto; font-weight:500;">
       Online safety starts with you.<br>
-      Keep building good habits by remembering these 4 key actions:<br>
+      Keep building good habits with 4 key actions:<br>
       🔒 Set boundaries<br>
-      💭 Think before you act<br>
-      🚩 Flag and report harms<br>
-      🗣️ Tell someone you trust<br>
-      <span style="color:#ed1d6b;font-weight:bold;">Want to level up your digital know-how?</span><br> Visit <a href="https://www.digitalforlife.gov.sg" target="_blank" style="color:#f9a01b;text-decoration:underline;">Digital for Life portal</a> for more tips and tools.
-    </p>
+      💭 Think before clicking<br>
+      🚩 Flag and report<br>
+      🗣️ Reach out to a trusted person<br>
+      <br>
+      <span style="color:#ed1d6b;font-weight:bold;">Want to level up?</span><br> Visit <a href="https://www.digitalforlife.gov.sg" target="_blank" style="color:#f9a01b;text-decoration:underline;">Digital for Life portal</a> for more tips and tools.
+    </h5>
     <div class="button-row" style="margin-top:18px;">
       <button class="primary" onclick="startGame()">Play Again</button>
       <button class="secondary" onclick="backToHome()">Back to Home</button>
@@ -568,49 +569,54 @@
     }
 
     function revealHint() {
-      if (hintsLeft === 0) return;
+      score -= 1; // Penalty for hint
+      if (hintsLeft <= 0) return;
       hintsLeft--;
-      score = Math.max(0, score - 1); // Deduct 1 point for using a hint, never below zero
       document.getElementById("hint-count").textContent = hintsLeft;
+      document.getElementById("hint-box").textContent = currentWord.hint;
       document.getElementById("score-count").textContent = score;
-      const hintBox = document.getElementById("hint-box");
-      hintBox.textContent = currentWord.hint;
-      hintBox.style.display = "flex";
-      setTimeout(() => {
-        hintBox.style.opacity = 1;
-      }, 10);
+      document.getElementById("feedback").className = "correct";
       hintUsedForCurrent = true;
     }
 
     function skipWord() {
-      remainingWords.push(currentWord);
+      score -= 0; // Penalty for skipping
+      document.getElementById("score-count").textContent = score;
       pickRandomWord();
+      document.getElementById("feedback").textContent = "Word skipped!";
+      document.getElementById("feedback").className = "wrong";
     }
 
-    document.getElementById("answer-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const inputs = Array.from(document.querySelectorAll(".letter-box"));
-      const userAnswer = inputs.map(input => input.value).join("").replace(/-/g, "");
-      const correctAnswer = currentWord.word.replace(/-/g, "");
-      if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
-        // Correct answer
-        score += 3;
-        document.getElementById("score-count").textContent = score;
-        document.getElementById("feedback").textContent = "Correct! 🎉";
-        document.getElementById("feedback").className = "correct";
-        pickRandomWord(); // Immediately go to next word, no pause
-      } else {
-        // Wrong answer
-        score -= 1;
-        document.getElementById("feedback").textContent = "Try again!";
-        document.getElementById("feedback").className = "wrong";
-      }
-    });
-
-    function backToHome() {
-      hide("end-screen");
+    document.addEventListener("DOMContentLoaded", function() {
       show("start-screen");
-    }
+      const form = document.getElementById("answer-form");
+      form.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const inputs = Array.from(document.querySelectorAll(".letter-box"));
+        const userAnswer = inputs.map(input => input.value).join("").replace(/-/g, "");
+        const correctAnswer = currentWord.word.replace(/-/g, "");
+        if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+          // Correct answer
+          score += 3;
+          document.getElementById("score-count").textContent = score;
+          document.getElementById("feedback").textContent = "Correct! 🎉";
+          document.getElementById("feedback").className = "correct";
+          pickRandomWord(); // Immediately go to next word, no pause
+        } else {
+          // Wrong answer
+          score -= 1;
+          document.getElementById("score-count").textContent = score; // Update score immediately
+          document.getElementById("feedback").textContent = "Try again!";
+          document.getElementById("feedback").className = "wrong";
+        }
+      });
+
+      // Ensure all global functions are available after reload
+      window.startGame = startGame;
+      window.revealHint = revealHint;
+      window.skipWord = skipWord;
+      window.backToHome = backToHome;
+    });
   </script>
 </body>
 </html>
