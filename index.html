@@ -273,6 +273,7 @@
     <div id="char-count" style="color:#52247f; font-size:1.1rem; margin-bottom:0.5rem;"></div>
     <div id="hint-box"></div>
     <form id="answer-form" autocomplete="off">
+      <input id="keyboard-keeper" style="position:absolute;opacity:0;width:1px;height:1px;z-index:-1;top:-100px;left:-100px;" inputmode="text" autocomplete="off" tabindex="-1">
       <div id="input-rows"></div>
       <div style="height:18px;"></div>
       <div id="feedback-container" style="min-height:1.5em;display:flex;align-items:center;justify-content:center;">
@@ -312,6 +313,7 @@
       <button class="secondary" onclick="backToHome()">Back to Home</button>
     </div>
   </div>
+  <input id="keyboard-keeper" style="position:absolute;opacity:0;height:0;width:0;pointer-events:none;" tabindex="-1" autocomplete="off">
 
   <script>
     const words = [
@@ -555,14 +557,15 @@
                     // Go to last input of previous row
                     const prevRow = this.parentElement.previousElementSibling;
                     if (prevRow) {
-                      let prevInput = prevRow.querySelector('input:not([disabled])');
-                      if (prevInput) {
-                        prevInput.focus();
-                        prevInput.select();
+                      let lastInput = prevRow.querySelector('input:not([disabled]):last-child');
+                      if (lastInput) {
+                        lastInput.focus();
+                        lastInput.select();
                       }
                     }
                   } else if (prev) {
                     prev.focus();
+                    prev.select();
                   }
                 }
               });
@@ -572,6 +575,25 @@
         }
         boxes.appendChild(row);
       });
+    }
+
+    function revealHint() {
+      if (hintUsedForCurrent || hintsLeft <= 0) return;
+      document.getElementById("hint-box").textContent = currentWord.hint;
+      hintsLeft--;
+      hintUsedForCurrent = true;
+      document.getElementById("hint-count").textContent = hintsLeft;
+      // Disable hint button for this word
+      document.querySelector('button.secondary[onclick="revealHint()"]')?.setAttribute('disabled', 'disabled');
+      // Deduct 1 point, but not below zero
+      score = Math.max(0, score - 1);
+      document.getElementById("score-count").textContent = score;
+    }
+
+    function skipWord() {
+      pickRandomWord();
+      // Re-enable hint button for next word
+      document.querySelector('button.secondary[onclick="revealHint()"]')?.removeAttribute('disabled');
     }
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -589,6 +611,8 @@
           document.getElementById("feedback").textContent = "Correct! 🎉";
           document.getElementById("feedback").className = "correct";
           pickRandomWord();
+          // Re-enable hint button for next word
+          document.querySelector('button.secondary[onclick="revealHint()"]')?.removeAttribute('disabled');
         } else {
           // Wrong answer
           score -= 1;
