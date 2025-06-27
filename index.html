@@ -66,15 +66,15 @@
       margin-bottom: 2px;
     }
     .letter-box {
-      width: 22px;
-      height: 26px;
+      width: 26px;
+      height: 32px;
       border: 2px solid #52247f;
       border-right: none;
-      margin: 0 4px; /* Increased horizontal space between boxes */
-      font-size: 1rem;
+      margin: 0 4px;
+      font-size: 1.1rem;
       text-transform: uppercase;
       text-align: center;
-      line-height: 26px;
+      line-height: 32px;
       background-color: white;
       font-family: 'Fredoka', sans-serif;
       font-weight: bold;
@@ -106,11 +106,11 @@
     }
     @media (max-width: 480px) {
       .letter-box, .hyphen-box {
-        width: 15px;
-        height: 18px;
-        font-size: 0.8rem;
-        border-radius: 4px;
-        line-height: 18px;
+        width: 20px;
+        height: 24px;
+        font-size: 0.95rem;
+        border-radius: 5px;
+        line-height: 24px;
       }
       .word-row .letter-box:first-child {
         border-top-left-radius: 5px;
@@ -236,12 +236,12 @@
     }
     @media (max-width: 480px) {
       .letter-box, .hyphen-box {
-        width: 18px;
-        height: 22px;
-        font-size: 0.85rem;
+        width: 20px;
+        height: 24px;
+        font-size: 0.95rem;
         margin: 0.5px;
         border-radius: 5px;
-        line-height: 22px;
+        line-height: 24px;
       }
       .boxes-container {
         min-height: 80px;
@@ -476,11 +476,14 @@
       document.getElementById("emoji-display").textContent = currentWord.emoji;
       updateCharCountDisplay(currentWord.word);
       displayBoxes(currentWord.word);
-      // Autofocus first empty input
+      // Autofocus first empty input (for mobile: delay to ensure DOM is ready)
       setTimeout(function() {
         var firstInput = document.querySelector('.letter-box:not([disabled])');
-        if (firstInput) firstInput.focus();
-      }, 100);
+        if (firstInput) {
+          firstInput.focus();
+          firstInput.select();
+        }
+      }, 250);
     }
 
     function displayBoxes(word) {
@@ -551,9 +554,12 @@
                   if (!prev && this.parentElement.previousElementSibling) {
                     // Go to last input of previous row
                     const prevRow = this.parentElement.previousElementSibling;
-                    let lastInput = prevRow.querySelector('input:not([disabled]):last-child');
-                    if (lastInput) {
-                      lastInput.focus();
+                    if (prevRow) {
+                      let prevInput = prevRow.querySelector('input:not([disabled])');
+                      if (prevInput) {
+                        prevInput.focus();
+                        prevInput.select();
+                      }
                     }
                   } else if (prev) {
                     prev.focus();
@@ -566,25 +572,6 @@
         }
         boxes.appendChild(row);
       });
-    }
-
-    function revealHint() {
-      score -= 1; // Penalty for hint
-      if (hintsLeft <= 0) return;
-      hintsLeft--;
-      document.getElementById("hint-count").textContent = hintsLeft;
-      document.getElementById("hint-box").textContent = currentWord.hint;
-      document.getElementById("score-count").textContent = score;
-      document.getElementById("feedback").className = "correct";
-      hintUsedForCurrent = true;
-    }
-
-    function skipWord() {
-      score -= 0; // Penalty for skipping
-      document.getElementById("score-count").textContent = score;
-      pickRandomWord();
-      document.getElementById("feedback").textContent = "Word skipped!";
-      document.getElementById("feedback").className = "wrong";
     }
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -601,17 +588,15 @@
           document.getElementById("score-count").textContent = score;
           document.getElementById("feedback").textContent = "Correct! 🎉";
           document.getElementById("feedback").className = "correct";
-          pickRandomWord(); // Immediately go to next word, no pause
+          pickRandomWord();
         } else {
           // Wrong answer
           score -= 1;
-          document.getElementById("score-count").textContent = score; // Update score immediately
+          document.getElementById("score-count").textContent = score;
           document.getElementById("feedback").textContent = "Try again!";
           document.getElementById("feedback").className = "wrong";
         }
       });
-
-      // Ensure all global functions are available after reload
       window.startGame = startGame;
       window.revealHint = revealHint;
       window.skipWord = skipWord;
