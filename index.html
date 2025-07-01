@@ -596,6 +596,12 @@
       document.querySelector('button.secondary[onclick="revealHint()"]')?.removeAttribute('disabled');
     }
 
+    function backToHome() {
+      hide("quiz-container");
+      hide("end-screen");
+      show("start-screen");
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
       show("start-screen");
       const form = document.getElementById("answer-form");
