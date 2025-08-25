@@ -423,13 +423,14 @@
       }
     ];
 
-    let remainingWords = [];
-    let currentWord = null;
-    let hintsLeft = 5;
-    let hintUsedForCurrent = false;
-    let timer = 60;
-    let score = 0;
-    let interval = null;
+  let remainingWords = [];
+  let currentWord = null;
+  let hintsLeft = 5;
+  let hintUsedForCurrent = false;
+  let timer = 60;
+  let score = 0;
+  let interval = null;
+  let shuffledWords = [];
 
     function show(id) {
       document.getElementById(id).style.display = 'block';
@@ -446,8 +447,17 @@
       return "👍 Great try! Every attempt helps you learn and grow!";
     }
 
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
     function startGame() {
-      remainingWords = [...words];
+      shuffledWords = [...words];
+      shuffleArray(shuffledWords);
+      remainingWords = [...shuffledWords];
       currentWord = null;
       hintsLeft = 5;
       hintUsedForCurrent = false;
@@ -497,8 +507,8 @@
       document.getElementById("hint-box").textContent = "";
       document.getElementById("feedback").textContent = "";
       hintUsedForCurrent = false;
-      const index = Math.floor(Math.random() * remainingWords.length);
-      currentWord = remainingWords.splice(index, 1)[0];
+      // Always pick the first word in the list
+      currentWord = remainingWords.shift();
       document.getElementById("emoji-display").textContent = currentWord.emoji;
       updateCharCountDisplay(currentWord.word);
       displayBoxes(currentWord.word);
@@ -615,6 +625,10 @@
     }
 
     function skipWord() {
+      // Add current word to end of the list
+      if (currentWord) {
+        remainingWords.push(currentWord);
+      }
       pickRandomWord();
       // Re-enable hint button for next word
       document.querySelector('button.secondary[onclick="revealHint()"]')?.removeAttribute('disabled');
