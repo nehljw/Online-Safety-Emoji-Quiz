@@ -3,672 +3,265 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Guess The Emojis: Online Safety Edition</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
+  <title>Emoji Clues: Decode the Online Safety Tip</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Exo+2:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-        header {
-          font-family: 'Fredoka', cursive, sans-serif;
-          font-size: 2.2rem;
-          font-weight: 600;
-          background: linear-gradient(90deg, #ffb347 0%, #ffccff 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          text-fill-color: transparent;
-          text-shadow: 2px 4px 12px rgba(82,36,127,0.13), 0 2px 0 #ffffff;
-          letter-spacing: 1.5px;
-          margin: 32px auto 24px auto;
-          padding: 0.5em 0 0.3em 0;
-          border-radius: 18px;
-          width: fit-content;
-          box-shadow: 0 2px 16px 0 rgba(255,179,71,0.08);
-          transition: transform 0.2s;
-        }
-        header:hover {
-          transform: scale(1.03) rotate(-1deg);
-          box-shadow: 0 4px 24px 0 rgba(255,179,71,0.16);
-        }
-    body {
-      font-family: 'Fredoka', sans-serif;
-  /* Notebook horizontal lines: light yellow background, faint lines 40% darker than background */
-  background-color: #FFF6DC;
-  /* 40% darker than #FFF6DC is #998c54 */
-  background-image: url('data:image/svg+xml;utf8,<svg width="100" height="50" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="50" fill="none"/><line x1="0" y1="31" x2="100" y2="31" stroke="%23998c54" stroke-width="2" stroke-opacity="0.13"/></svg>');
-  background-repeat: repeat-y;
-  background-size: 100% 32px;
-  color: #333;
-  margin: 0;
-      padding: 0;
-      text-align: center;
-}
-    header {
-      background: #52247f;
-      color: white;
-      padding: 1rem;
-      font-size: 1.5rem;
+    :root{
+      --purple:#6d35a6;
+      --pink:#ed1d6b;
+      --yellow:#ffd24f;
+      --orange:#f9a01b;
+      --teal:#00fff7;
+      --ink:#fff;
+      --bg1:#0f0c29;
+      --bg2:#302b63;
+      --bg3:#24243e;
+      --radius:10px;
+      --box:38px;
+      --box-sm:30px;
     }
-    #start-screen, #end-screen, #quiz-container {
-      max-width: 680px;
-      margin: 2rem auto;
-      padding: 2rem 1rem;
-      border-radius: 20px;
-      background-color: #fff6fb;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    #quiz-container, #end-screen {
-      display: none;
-    }
-    .emoji {
-      font-size: 1.5rem;
-      margin-bottom: 0.2rem;
-    }
-    #hint-box {
-      min-height: 2em;
-      height: 2.2em;
-      font-style: italic;
-      color: #00788a;
-      margin-top: 0.2rem;
-      margin-bottom: 0.2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .boxes-container {
-      min-height: 180px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 1rem 0;
-    }
-    .boxes {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-    }
-    .word-row {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 2px;
-    }
-    .letter-box {
-      width: 26px;
-      height: 32px;
-      border: 2px solid #52247f;
-      border-right: none;
-      margin: 0 4px;
-      font-size: 1.1rem;
-      text-transform: uppercase;
-      text-align: center;
-      line-height: 32px;
-      background-color: white;
-      font-family: 'Fredoka', sans-serif;
-      font-weight: bold;
-      border-radius: 0;
-      transition: box-shadow 0.2s;
-    }
-    .word-row .letter-box:last-child {
-      border-right: 2px solid #52247f;
-      border-top-right-radius: 8px;
-      border-bottom-right-radius: 8px;
-    }
-    .word-row .letter-box:first-child {
-      border-top-left-radius: 8px;
-      border-bottom-left-radius: 8px;
-      border-left: 2px solid #52247f;
-    }
-    .hyphen-box {
-      width: 18px;
-      height: 26px;
-      margin: 0 3px;
+
+    *{box-sizing:border-box}
+    body{
+      margin:0; color:var(--ink); font-family:'Exo 2', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(120deg, var(--bg1), var(--bg2), var(--bg3));
+      background-size: 300% 300%;
+      animation: bgShift 20s linear infinite;
+      display:flex; justify-content:center; align-items:center; min-height:100vh; text-align:center;
       font-size: 1rem;
-      line-height: 26px;
-      text-align: center;
-      background-color: transparent;
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
-    @media (max-width: 480px) {
-      .letter-box, .hyphen-box {
-        width: 20px;
-        height: 24px;
-        font-size: 0.95rem;
-        border-radius: 5px;
-        line-height: 24px;
-      }
-      .word-row .letter-box:first-child {
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
-      }
-      .word-row .letter-box:last-child {
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
-      }
-      .boxes-container {
-        min-height: 60px;
-      }
+    @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+    header{ margin-bottom:20px; }
+    header h1{
+      font-family:'Orbitron', sans-serif;
+      font-size:1.8rem; color:#fff; text-shadow:0 0 8px var(--pink),0 0 16px var(--pink);
+      margin:0;
     }
-    input[type="text"] {
-      padding: 0.5rem;
-      font-size: 1rem;
-      width: 100%;
-      max-width: 300px;
-      border: 2px solid #0085fc;
-      border-radius: 10px;
-      margin-bottom: 6px;
+    header h3{
+      font-family:'Exo 2', sans-serif;
+      font-size:1rem; color:var(--yellow); margin:6px 0 0 0; font-weight:500;
     }
-    .button-row {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
+
+    .card{
+      background:rgba(0,0,0,0.6);
+      border:4px solid var(--teal);
+      border-radius:var(--radius);
+      padding:24px; max-width:700px; width:90%;
+      box-shadow:0 0 20px var(--teal),0 0 40px var(--pink);
+      margin:auto;
+      font-size:1rem;
     }
-    button {
-      padding: 0.5rem 1.2rem;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-family: 'Fredoka', sans-serif;
-      font-weight: bold;
+
+    h2{color:var(--yellow); margin:0 0 16px; font-size:1.2rem; font-family:'Orbitron', sans-serif;}
+    .emoji{font-size:1.6rem; margin:12px 0}
+    #char-count{color:var(--orange); margin-bottom:12px; font-size:0.9rem}
+    #hint{color:var(--teal); min-height:1.5em; font-size:0.95rem}
+
+    .boxes{display:flex;flex-direction:column;gap:8px;align-items:center;margin:14px 0}
+    .row{display:flex;flex-wrap:wrap;justify-content:center}
+    .letter{width:var(--box);height:var(--box);margin:3px;border-radius:4px;border:2px solid var(--yellow);
+      text-align:center;font-weight:700;font-size:1.2rem; background:#111; color:#fff;
+      text-transform:uppercase; box-shadow:inset 0 0 5px #000,0 0 10px var(--yellow);
+      font-family:'Orbitron', sans-serif;
     }
-    button.primary {
-      background-color: #ed1d6b;
-      color: white;
-    }
-    button.primary:hover {
-      background-color: #52247f;
-    }
-    button.secondary {
-      background-color: #ffd24f;
-      color: #333;
-    }
-    button.secondary:hover {
-      background-color: #f9a01b;
-    }
-    #timer {
-      font-size: 1rem;
-      color: #f1386a;
-      margin-top: 0.5rem;
-    }
-    #score {
-      font-weight: 1rem;
-      color: #52247f;
-      margin-top: 1rem;
-    }
-    #feedback {
-      font-size: 1rem;
-      margin-top: 4px;
-    }
-    .correct {
-      color: #00788a;
-    }
-    .wrong {
-      color: #ed1d6b;
-    }
-    #end-screen {
-      background: #fff6fb;
-      box-shadow: 0 6px 24px rgba(237,29,107,0.10);
-      border-radius: 24px;
-      padding: 2.5rem 1.5rem 2.5rem 1.5rem;
-      margin-top: 2rem;
-      animation: popin 0.7s cubic-bezier(.68,-0.55,.27,1.55);
-    }
-    #end-screen h2 {
-      font-size: 2.2rem;
-      color: #ed1d6b;
-      margin-bottom: 0.5rem;
-      letter-spacing: 1px;
-      text-shadow: 0 2px 8px none;
-    }
-    #end-message {
-      font-size: 1.25rem;
-      color: #52247f;
-      margin-bottom: 0.7rem;
-      font-weight: 500;
-    }
-    #final-score {
-      display: inline-block;
-      font-size: 2rem;
-      font-weight: bold;
-      color: #fff6fb;
-      background: #52247f;
-      border-radius: 16px;
-      padding: 0.3em 0.9em;
-      margin: 0.5em 0 1em 0;
-      box-shadow: 0 2px 12px none;
-      letter-spacing: 2px;
-      border: 3px solid none;
-      text-shadow: 0 2px 8px none;
-    }
-    #end-screen h5 {
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 1.1em 1em 1.1em 1em;
-      margin: 1.2em auto 0 auto;
-      color: #52247f;
-      font-size: 1.08rem;
-      box-shadow: 0 2px 8px #ffd24f22;
-      max-width: 520px;
-      text-align: left;
-    }
-    @keyframes popin {
-      0% { transform: scale(0.7); opacity: 0; }
-      80% { transform: scale(1.08); opacity: 1; }
-      100% { transform: scale(1); }
-    }
-    @media (max-width: 480px) {
-      .letter-box, .hyphen-box {
-        width: 20px;
-        height: 24px;
-        font-size: 0.95rem;
-        margin: 0.5px;
-        border-radius: 5px;
-        line-height: 24px;
-      }
-      .boxes-container {
-        min-height: 80px;
-      }
+    .letter[disabled]{background:#333; color:#aaa}
+    .hyph{width:18px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.2rem}
+
+    .btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:16px}
+    button{font-family:'Orbitron', sans-serif;font-size:0.85rem;padding:0.7rem 1.2rem;cursor:pointer;border:2px solid #fff;background:#000;color:#fff;text-transform:uppercase;text-shadow:0 0 6px var(--pink); font-weight:600}
+    .primary{border-color:var(--pink); box-shadow:0 0 8px var(--pink)}
+    .primary:hover{background:var(--pink); color:#000}
+    .secondary{border-color:var(--yellow); box-shadow:0 0 8px var(--yellow); color:var(--yellow)}
+    .secondary:hover{background:var(--yellow); color:#000}
+    button[disabled]{opacity:.5; cursor:not-allowed}
+
+    .meta{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:0.9rem;color:var(--yellow)}
+    #feedback{margin-top:12px;min-height:1.4em;font-size:0.95rem}
+    .correct{color:lime}
+    .wrong{color:var(--pink)}
+
+    .twrap{width:100%;height:12px;background:#222;border:2px solid var(--teal);margin-top:14px}
+    .tbar{height:100%;background:linear-gradient(90deg,var(--pink),var(--yellow),var(--teal));transition:width .3s}
+
+    #end h2{color:var(--pink); font-size:1.4rem; font-family:'Orbitron', sans-serif;}
+    #final-score{display:inline-block;padding:6px 10px;margin-top:6px;background:#000;color:#fff;border:2px solid var(--yellow); font-size:1rem}
+    .tips{margin-top:14px;font-size:0.9rem;color:#fff;text-align:center;font-family:'Exo 2', sans-serif;}
+    .tips ul{padding-left:0;list-style-position:inside;text-align:center}
+    .tips p{margin:8px 0}
+
+    /* Mobile tweaks to fit up to 8 letters on one line */
+    @media(max-width:480px){
+      :root{ --box-sm:26px; }
+      .letter{width:var(--box-sm);height:var(--box-sm);font-size:0.95rem;margin:2px}
+      .hyph{width:14px;font-size:1rem}
+      .card{width:94%;padding:20px}
     }
   </style>
 </head>
 <body>
+  <div class="card" id="container">
+    <header>
+      <h1>🎮 Emoji Clues 🎮</h1>
+      <h3>Decode the Online Safety Tip</h3>
+    </header>
 
-  <header>Emoji Clues: Decode the Online Safety Tip</header>
+    <!-- START -->
+    <section id="start-screen">
+      <h2>How to Play</h2>
+      <p style="font-size:0.95rem;line-height:1.6">Guess the missing word from the emoji clue. Submit to score points!<br>Use hints (−1 point) or skip. You have 60 seconds!</p>
+      <div class="btns"><button class="primary" id="start-btn">Start Game</button></div>
+    </section>
 
-  <div id="start-screen">
-    <div id="instructions" style="background: #ffffff; color: #52247f; border-radius: 16px; padding: 1.2rem 1rem 1.2rem 1rem; margin-bottom: 1.5rem; font-size: 1.1rem; box-shadow: 0 2px 8px rgba(237,29,107,0.08);">
-      <h2 style="margin-top:0; color:#ed1d6b; font-size:1.5rem;">How to Play 🎉</h2>
-      <h5 style="text-align:left; max-width:500px; margin:0 auto; font-weight:500;">
-        1. Guess the <span style="color:#00788a;">word</span> replaced by the <span style="color:#00788a;">emoji</span> in the phrase.</br>
-        2. Type your answer and hit <span style="color:#ed1d6b;;"><b>Submit</b></span> to complete the online safety tip.</br>
-        3. Use <span style="color:#f9a01b;">hints</span> if you get stuck (limited to 5 per game).</br>
-        4. <span style="color:#f9a01b;">Skip</span> a word if you want to try another.</br>
-        5. Score points (🌟) for each correct answer before time runs out!</br>
-        <br>Note: The number in the bracket indicates how many letters there are in each word. </br>
-      </h5>
-      <div style="margin-top:0.7rem; font-size:1.05rem; color:#52247f;">Ready? Click <b>Start Game</b> to begin! 🚀</div>
-    </div>
-    <button class="primary" onclick="startGame()">Start Game</button>
-  </div>
-
-  <div id="quiz-container">
-    <div class="emoji" id="emoji-display"></div><br>
-    <div id="char-count" style="color:#52247f; font-size:1.1rem; margin-bottom:0.5rem;"></div>
-    <div id="hint-box"></div>
-    <form id="answer-form" autocomplete="off">
-      <input id="keyboard-keeper" style="position:absolute;opacity:0;width:1px;height:1px;z-index:-1;top:-100px;left:-100px;" inputmode="text" autocomplete="off" tabindex="-1">
-      <div id="input-rows"></div>
-      <div style="height:18px;"></div>
-      <div id="feedback-container" style="min-height:1.5em;display:flex;align-items:center;justify-content:center;">
-        <div id="feedback" style="margin-top:0px;width:100%;"></div>
+    <!-- QUIZ -->
+    <section id="quiz" style="display:none">
+      <div class="emoji" id="emoji"></div>
+      <div id="char-count"></div>
+      <div id="hint"></div>
+      <form id="form">
+        <div id="boxes" class="boxes"></div>
+        <div class="btns">
+          <button type="submit" class="primary">Submit</button>
+          <button type="button" class="secondary" id="hint-btn">Hint (<span id="hint-count">5</span>)</button>
+          <button type="button" class="secondary" id="skip-btn">Skip</button>
+        </div>
+      </form>
+      <div class="meta">
+        <div id="score">Score: <span id="score-val">0</span></div>
+        <div id="timer">⏱ <span id="time">60</span>s</div>
       </div>
-      <div>
-      <div style="height:10px;"></div>
-        <button type="submit" class="primary">Submit</button>
-      </div>
-    </form>
-    <div class="button-row">
-      <button class="secondary" onclick="revealHint()">Hint (<span id="hint-count">5</span>)</button>
-      <button class="secondary" onclick="skipWord()">Skip</button>
-    </div>
-    <div id="score">🌟 Score: <span id="score-count">0</span></div>
-    <div id="timer">⏱️ Time Left: <span id="time">60</span>s</div>
-  </div>
+      <div class="twrap"><div class="tbar" id="tbar" style="width:100%"></div></div>
+      <div id="feedback"></div>
+    </section>
 
-  <div id="end-screen">
-    <h2>Time's Up!</h2>
-    <div id="end-message"></div>
-    <div style="margin: 0.7em 0 0.7em 0;">
-      <span style="font-size:1.1rem;color:#52247f;">Your final score:</span><br>
-      <span id="final-score"></span></div>
-    <h5 style="text-align:center; max-width:500px; margin:0 auto; font-weight:500;">
-      Online safety starts with you.<br>
-      Keep building good habits with 4 key actions:<br>
-      🔒 Set boundaries online<br>
-      💭 Think before you act<br>
-      🚩 Report inappropriate content<br>
-      🗣️ Engage and Support<br>
-      <br>
-      <span style="color:#ed1d6b;font-weight:bold;">Want to level up?</span><br> Visit <a href="https://www.digitalforlife.gov.sg" target="_blank" style="color:#f9a01b;text-decoration:underline;">Digital for Life portal</a> for more tips and tools.
-    </h5>
-    <div class="button-row" style="margin-top:18px;">
-      <button class="primary" onclick="startGame()">Play Again</button>
-      <button class="secondary" onclick="backToHome()">Back to Home</button>
-    </div>
+    <!-- END -->
+    <section id="end" style="display:none">
+      <h2>Game Over!</h2>
+      <div id="end-msg"></div>
+      <div>Your final score:</div>
+      <div id="final-score"></div>
+      <div class="tips">
+        <p>Keep building good habits with 4 key actions:</p>
+        <ul>
+          <li>🔒 Set boundaries online</li>
+          <li>💭 Think before you act</li>
+          <li>🚩 Report inappropriate content</li>
+          <li>🗣️ Engage and Support</li>
+        </ul>
+        <p>Level up at the <a href="https://www.digitalforlife.gov.sg" target="_blank" style="color:var(--yellow)">Digital for Life portal</a>.</p>
+      </div>
+      <div class="btns">
+        <button class="primary" id="again">Play Again</button>
+        <button class="secondary" id="home">Back to Home</button>
+      </div>
+    </section>
   </div>
-  <input id="keyboard-keeper" style="position:absolute;opacity:0;height:0;width:0;pointer-events:none;" tabindex="-1" autocomplete="off">
 
   <script>
-    const words = [
-      {
-        word: "privacy",
-        emoji: "set 👁️ settings",
-        hint: "Controls who can see your info online."
-      },
-      {
-        word: "personal",
-        emoji: "secure 👤 information",
-        hint: "Your name, address, or birthday."
-      },
-      {
-        word: "balance",
-        emoji: "⚖️ your time online",
-        hint: "Ensure you have offline time too."
-      },
-      {
-        word: "digital",
-        emoji: "manage 🌐 footprints",
-        hint: "What you leave behind online."
-      },
-      {
-        word: "block",
-        emoji: "🚫 abusive users",
-        hint: "Stop someone from messaging or contacting you."
-      },
-      {
-        word: "think",
-        emoji: "💭 before you post",
-        hint: "Pause before making your next move online."
-      },
-      {
-        word: "fake",
-        emoji: "spot ❌ news",
-        hint: "It spreads lies, not facts."
-      },
-      {
-        word: "scams",
-        emoji: "check for 💸",
-        hint: "Some offers are too good to be true."
-      },
-      {
-        word: "kind",
-        emoji: "be 🥰 online",
-        hint: "Be respectful and gracious in digital spaces."
-      },
-      {
-        word: "support",
-        emoji: "🤝 others in need",
-        hint: "Show care when someone is upset or bullied online."
-      },
-      {
-        word: "flag",
-        emoji: "🚩 inappropriate content",
-        hint: "Mark posts or messages that break community rules."
-      },
-      {
-        word: "report",
-        emoji: "📢 harmful behaviours",
-        hint: "Tell someone or a platform about abuse or threats."
-      },
-      {
-        word: "help",
-        emoji: "seek 🆘 when unsure",
-        hint: "If something feels wrong, talk to someone you trust."
-      },
-      {
-        word: "person",
-        emoji: "reach out to a trusted 🙋🏻‍♀️",
-        hint: "Talk to a parent, teacher, or older sibling for advice."
-      },
-      {
-        word: "strong",
-        emoji: "use 💪 passwords",
-        hint: "Create long, hard-to-guess passphrases for safety."
-      }
+    const words=[
+      {word:"privacy",emoji:"set 👁️ settings",hint:"Controls who can see your info online."},
+      {word:"personal",emoji:"secure 👤 information",hint:"Your name, address, or birthday."},
+      {word:"balance",emoji:"⚖️ your time online",hint:"Ensure you have offline time too."},
+      {word:"digital",emoji:"manage 🌐 footprints",hint:"What you leave behind online."},
+      {word:"block",emoji:"🚫 abusive users",hint:"Stop someone from messaging or contacting you."},
+      {word:"think",emoji:"💭 before you post",hint:"Pause before making your next move online."},
+      {word:"fake",emoji:"spot ❌ news",hint:"It spreads lies, not facts."},
+      {word:"scams",emoji:"check for 💸",hint:"Some offers are too good to be true."},
+      {word:"kind",emoji:"be 🥰 online",hint:"Be respectful and gracious in digital spaces."},
+      {word:"support",emoji:"🤝 others in need",hint:"Show care when someone is upset or bullied online."},
+      {word:"flag",emoji:"🚩 inappropriate content",hint:"Mark posts or messages that break community rules."},
+      {word:"report",emoji:"📢 harmful behaviours",hint:"Tell someone or a platform about abuse or threats."},
+      {word:"help",emoji:"seek 🆘 when unsure",hint:"If something feels wrong, talk to someone you trust."},
+      {word:"person",emoji:"reach out to a trusted 🙋🏻‍♀️",hint:"Talk to a parent, teacher, or older sibling for advice."},
+      {word:"strong",emoji:"use 💪 passwords",hint:"Create long, hard-to-guess passphrases for safety."}
     ];
 
-  let remainingWords = [];
-  let currentWord = null;
-  let hintsLeft = 5;
-  let hintUsedForCurrent = false;
-  let timer = 60;
-  let score = 0;
-  let interval = null;
-  let shuffledWords = [];
+    let remaining=[],current=null,hintsLeft=5,hintUsed=false,timer=60,score=0,tick=null,totalTime=60;
+    const $=id=>document.getElementById(id);
 
-    function show(id) {
-      document.getElementById(id).style.display = 'block';
-    }
-    function hide(id) {
-      document.getElementById(id).style.display = 'none';
+    function start(){
+      remaining=[...words];shuffle(remaining);hintsLeft=5;score=0;timer=totalTime;
+      $('hint-count').textContent=hintsLeft; $('score-val').textContent=score; $('feedback').textContent='';
+      $('start-screen').style.display='none';$('end').style.display='none';$('quiz').style.display='block';
+      pick(); clearInterval(tick); updateTimerBar();
+      tick=setInterval(()=>{timer--;$('time').textContent=timer;updateTimerBar();if(timer<=0){clearInterval(tick);end();}},1000);
     }
 
-    function getEndMessage(score) {
-      if (score >= 40) return "🌟 Impressive work! You're definitely an online safety guru!"
-      if (score >= 32) return "🎊 Incredible job! You're an online safety superstar!";
-      if (score >= 25) return "👏 Awesome work! You really know your online safety!";
-      if (score >= 12) return "🙌 Nice try! You're picking things up!";
-      return "👍 Great try! Every attempt helps you learn and grow!";
+    function end(){
+      $('quiz').style.display='none'; $('final-score').textContent=score; $('end-msg').textContent=endMessage(score); $('end').style.display='block';
     }
 
-    function shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
+    function endMessage(s){
+      if(s>=40)return"🌟 Impressive work! You're a safety guru!";
+      if(s>=25)return"👏 Awesome work!";
+      if(s>=12)return"🙌 Nice try!";
+      return"👍 Great try!";
     }
 
-    function startGame() {
-      shuffledWords = [...words];
-      shuffleArray(shuffledWords);
-      remainingWords = [...shuffledWords];
-      currentWord = null;
-      hintsLeft = 5;
-      hintUsedForCurrent = false;
-      timer = 60;
-      score = 0;
-      document.getElementById("score-count").textContent = score;
-      document.getElementById("hint-count").textContent = hintsLeft;
-      document.getElementById("feedback").textContent = "";
-      hide("start-screen");
-      hide("end-screen");
-      show("quiz-container");
-      pickRandomWord();
-      clearInterval(interval);
-      interval = setInterval(() => {
-        timer--;
-        document.getElementById("time").textContent = timer;
-        if (timer <= 0) {
-          clearInterval(interval);
-          hide("quiz-container");
-          document.getElementById("final-score").textContent = score;
-          document.getElementById("end-message").textContent = getEndMessage(score);
-          show("end-screen");
-        }
-      }, 1000);
+    function updateTimerBar(){const pct=Math.max(0,(timer/totalTime)*100);$('tbar').style.width=pct+'%';}
+
+    function pick(){
+      if(remaining.length===0){clearInterval(tick);return end();}
+      $('hint').textContent='';$('feedback').textContent='';hintUsed=false;$('hint-btn').disabled=false;
+      current=remaining.shift();$('emoji').textContent=current.emoji;updateCharCount(current.word);buildBoxes(current.word);
+      setTimeout(()=>{const first=document.querySelector('.letter:not([disabled])');if(first){first.focus();first.select();}},100);
     }
 
-    function getCharCounts(word) {
-      // Returns array of lengths for each word part (excluding spaces)
-      return word.split(" ").map(part => part.length);
-    }
+    function updateCharCount(word){const counts=word.split(' ').map(p=>p.length);$('char-count').textContent=`(${counts.join(', ')})`;}
 
-    function updateCharCountDisplay(word) {
-      const counts = getCharCounts(word);
-      document.getElementById("char-count").textContent = `(${counts.join(", ")})`;
-    }
-
-    function pickRandomWord() {
-      if (remainingWords.length === 0) {
-        // All questions finished, show success screen
-        clearInterval(interval);
-        hide("quiz-container");
-        document.getElementById("final-score").textContent = score;
-        document.getElementById("end-message").textContent = getEndMessage(score);
-        show("end-screen");
-        return;
-      }
-      document.getElementById("hint-box").textContent = "";
-      document.getElementById("feedback").textContent = "";
-      hintUsedForCurrent = false;
-      // Always pick the first word in the list
-      currentWord = remainingWords.shift();
-      document.getElementById("emoji-display").textContent = currentWord.emoji;
-      updateCharCountDisplay(currentWord.word);
-      displayBoxes(currentWord.word);
-      // Autofocus first empty input (for mobile: delay to ensure DOM is ready)
-      setTimeout(function() {
-        var firstInput = document.querySelector('.letter-box:not([disabled])');
-        if (firstInput) {
-          firstInput.focus();
-          firstInput.select();
-        }
-      }, 250);
-    }
-
-    function displayBoxes(word) {
-      const boxes = document.getElementById("input-rows");
-      boxes.innerHTML = "";
-      const wordParts = word.split(" ");
-      wordParts.forEach((part, partIdx) => {
-        const row = document.createElement("div");
-        row.className = "word-row";
-        for (let i = 0; i < part.length; i++) {
-          const char = part[i];
-          if (char === '-') {
-            const hyphen = document.createElement("span");
-            hyphen.className = "hyphen-box";
-            hyphen.textContent = "-";
-            hyphen.tabIndex = -1;
-            row.appendChild(hyphen);
+    function buildBoxes(word){
+      const cont=$('boxes'); cont.innerHTML='';
+      const parts=word.split(' ');
+      parts.forEach((part,idx)=>{
+        const row=document.createElement('div'); row.className='row';
+        for(let i=0;i<part.length;i++){
+          const ch=part[i];
+          if(ch==='-'){
+            const hy=document.createElement('span'); hy.className='hyph'; hy.textContent='-'; row.appendChild(hy);
           } else {
-            const input = document.createElement("input");
-            input.type = "text";
-            input.maxLength = 1;
-            input.className = "letter-box crossword-input";
-            input.autocomplete = "off";
-            input.inputMode = "text";
-            input.style.textTransform = "uppercase";
-            input.setAttribute('aria-label', `Letter ${i+1} of word ${partIdx+1}`);
-            input.style.width = "20px";
-            input.style.height = "20px";
-            input.style.fontSize = "1.3rem";
-            input.style.borderRadius = "8px";
-            input.style.boxShadow = "0 1px 2px #f9a01b22";
-            input.style.background = "#fff";
-            input.style.border = "2px solid #52247f";
-            input.style.textAlign = "center";
-            if (i === 0) {
-              input.value = char.toUpperCase();
-              input.disabled = true;
-              input.style.background = "#f9f6ff";
-              input.style.color = "#333";
-              input.style.fontWeight = "bold";
-              input.style.fontSize = "1.3rem";
-            } else {
-              input.addEventListener('input', function(e) {
-                this.value = this.value.toUpperCase();
-                let next = this.nextElementSibling;
-                // Skip over hyphens
-                while (next && next.classList.contains('hyphen-box')) {
-                  next = next.nextElementSibling;
-                }
-                if (this.value && next && next.tagName === 'INPUT') {
-                  next.focus();
-                } else if (this.value && this.parentElement.nextElementSibling) {
-                  // Move to next row's first input if exists
-                  const nextRow = this.parentElement.nextElementSibling;
-                  if (nextRow) {
-                    let nextInput = nextRow.querySelector('input:not([disabled])');
-                    if (nextInput) nextInput.focus();
-                  }
-                }
-              });
-              input.addEventListener('keydown', function(e) {
-                if (e.key === 'Backspace' && !this.value) {
-                  // Move to previous input, skipping hyphens
-                  let prev = this.previousElementSibling;
-                  while (prev && prev.classList && prev.classList.contains('hyphen-box')) {
-                    prev = prev.previousElementSibling;
-                  }
-                  if (!prev && this.parentElement.previousElementSibling) {
-                    // Go to last input of previous row
-                    const prevRow = this.parentElement.previousElementSibling;
-                    if (prevRow) {
-                      let lastInput = prevRow.querySelector('input:not([disabled]):last-child');
-                      if (lastInput) {
-                        lastInput.focus();
-                        lastInput.select();
-                      }
-                    }
-                  } else if (prev) {
-                    prev.focus();
-                    prev.select();
-                  }
-                }
-              });
-            }
+            const input=document.createElement('input');
+            input.type='text'; input.maxLength=1; input.className='letter'; input.autocomplete='off'; input.inputMode='text'; input.style.textTransform='uppercase';
+            if(i===0){ input.value=ch.toUpperCase(); input.disabled=true; }
             row.appendChild(input);
           }
         }
-        boxes.appendChild(row);
+        cont.appendChild(row);
       });
-    }
 
-    function revealHint() {
-      if (hintUsedForCurrent || hintsLeft <= 0) return;
-      document.getElementById("hint-box").textContent = currentWord.hint;
-      hintsLeft--;
-      hintUsedForCurrent = true;
-      document.getElementById("hint-count").textContent = hintsLeft;
-      // Disable hint button for this word
-      document.querySelector('button.secondary[onclick="revealHint()"]')?.setAttribute('disabled', 'disabled');
-      // Deduct 1 point, but not below zero
-      score = Math.max(0, score - 1);
-      document.getElementById("score-count").textContent = score;
-    }
-
-    function skipWord() {
-      // Add current word to end of the list
-      if (currentWord) {
-        remainingWords.push(currentWord);
-      }
-      pickRandomWord();
-      // Re-enable hint button for next word
-      document.querySelector('button.secondary[onclick="revealHint()"]')?.removeAttribute('disabled');
-    }
-
-    function backToHome() {
-      hide("quiz-container");
-      hide("end-screen");
-      show("start-screen");
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-      show("start-screen");
-      const form = document.getElementById("answer-form");
-      form.addEventListener("submit", function(e) {
-        e.preventDefault();
-        const inputs = Array.from(document.querySelectorAll(".letter-box"));
-        const userAnswer = inputs.map(input => input.value).join("").replace(/-/g, "");
-        const correctAnswer = currentWord.word.replace(/-/g, "");
-        if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
-          // Correct answer
-          score += 3;
-          document.getElementById("score-count").textContent = score;
-          document.getElementById("feedback").textContent = "Correct! 🎉";
-          document.getElementById("feedback").className = "correct";
-          pickRandomWord();
-          // Re-enable hint button for next word
-          document.querySelector('button.secondary[onclick="revealHint()"]')?.removeAttribute('disabled');
-        } else {
-          // Wrong answer
-          score -= 1;
-          document.getElementById("score-count").textContent = score;
-          document.getElementById("feedback").textContent = "Try again!";
-          document.getElementById("feedback").className = "wrong";
+      // auto advance typing
+      const inputs=cont.querySelectorAll('.letter');
+      inputs.forEach((inp,idx)=>{
+        if(!inp.disabled){
+          inp.addEventListener('input',function(){
+            this.value=this.value.toUpperCase();
+            if(this.value && idx<inputs.length-1){
+              inputs[idx+1].focus();
+            }
+          });
+          inp.addEventListener('keydown',function(e){
+            if(e.key==='Backspace' && !this.value && idx>0){
+              inputs[idx-1].focus();
+            }
+          });
         }
       });
-      window.startGame = startGame;
-      window.revealHint = revealHint;
-      window.skipWord = skipWord;
-      window.backToHome = backToHome;
+    }
+
+    function useHint(){if(hintUsed||hintsLeft<=0)return;$('hint').textContent=current.hint;hintsLeft--;hintUsed=true;$('hint-count').textContent=hintsLeft;$('hint-btn').disabled=true;score=Math.max(0,score-1);$('score-val').textContent=score;}
+
+    function skip(){if(current)remaining.push(current);pick();}
+
+    function home(){$('quiz').style.display='none';$('end').style.display='none';$('start-screen').style.display='block';}
+
+    function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
+
+    document.addEventListener('DOMContentLoaded',()=>{
+      $('start-btn').addEventListener('click',start);
+      $('again').addEventListener('click',start);
+      $('home').addEventListener('click',home);
+      $('hint-btn').addEventListener('click',useHint);
+      $('skip-btn').addEventListener('click',skip);
+      $('form').addEventListener('submit',e=>{e.preventDefault();const inputs=[...document.querySelectorAll('.letter')];const ans=inputs.map(i=>i.value).join('').replace(/-/g,'');const correct=current.word.replace(/-/g,'');if(ans.toLowerCase()===correct.toLowerCase()){score+=3;$('score-val').textContent=score;$('feedback').textContent='Correct!';$('feedback').className='correct';pick();}else{score=Math.max(0,score-1);$('score-val').textContent=score;$('feedback').textContent='Try again!';$('feedback').className='wrong';}});
     });
   </script>
 </body>
