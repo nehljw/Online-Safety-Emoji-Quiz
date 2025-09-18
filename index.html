@@ -7,11 +7,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Exo+2:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root{
-      --purple:#6d35a6;
+      --purple:#52247F;
       --pink:#ed1d6b;
       --yellow:#ffd24f;
       --orange:#f9a01b;
-      --teal:#00fff7;
+      --teal:#83cfca;
       --ink:#fff;
       --bg1:#0f0c29;
       --bg2:#302b63;
@@ -29,6 +29,21 @@
       animation: bgShift 20s linear infinite;
       display:flex; justify-content:center; align-items:center; min-height:100vh; text-align:center;
       font-size: 1rem;
+  position: relative;
+  z-index: 0;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.18;
+      background-image:
+        repeating-linear-gradient(135deg, #fff2 0px, #fff2 2px, transparent 2px, transparent 32px),
+        repeating-linear-gradient(45deg, #fff2 0px, #fff2 2px, transparent 2px, transparent 32px);
+      background-blend-mode: lighten;
+    }
     }
     @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
@@ -44,13 +59,15 @@
     }
 
     .card{
-      background:rgba(0,0,0,0.6);
-      border:4px solid var(--teal);
-      border-radius:var(--radius);
-      padding:24px; max-width:700px; width:90%;
-      box-shadow:0 0 20px var(--teal),0 0 40px var(--pink);
-      margin:auto;
-      font-size:1rem;
+  background:rgba(0,0,0,0.6);
+  border:4px solid var(--teal);
+  border-radius:var(--radius);
+  padding:24px; max-width:700px; width:90%;
+  box-shadow:0 0 20px var(--teal),0 0 40px var(--pink);
+  margin:auto;
+  font-size:1rem;
+  position: relative;
+  z-index: 2;
     }
 
     h2{color:var(--yellow); margin:0 0 16px; font-size:1.2rem; font-family:'Orbitron', sans-serif;}
@@ -82,7 +99,7 @@
     .wrong{color:var(--pink)}
 
     .twrap{width:100%;height:12px;background:#222;border:2px solid var(--teal);margin-top:14px}
-    .tbar{height:100%;background:linear-gradient(90deg,var(--pink),var(--yellow),var(--teal));transition:width .3s}
+  .tbar{height:100%;background:linear-gradient(90deg,var(--pink),var(--orange),var(--purple));transition:width .3s}
 
     #end h2{color:var(--pink); font-size:1.4rem; font-family:'Orbitron', sans-serif;}
     #final-score{display:inline-block;padding:6px 10px;margin-top:6px;background:#000;color:#fff;border:2px solid var(--yellow); font-size:1rem}
